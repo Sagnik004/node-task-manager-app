@@ -3,6 +3,7 @@ const mailgun = require('mailgun-js');
 const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY,
   domain: process.env.MAILGUN_DOMAIN,
+  testMode: process.env.TESTMODE || false,
 });
 
 const sendWelcomeEmail = (email, name) => {
@@ -39,7 +40,9 @@ Please let us know what went wrong!`,
 
 const shootEmail = (mailData) => {
   mg.messages().send(mailData, (err, body) => {
-    console.log(body);
+    if (err) {
+      throw new Error('Error occured while sending email');
+    }
   });
 };
 
